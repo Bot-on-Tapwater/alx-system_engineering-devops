@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Use while loop to print strings
-
+# This script is displaying "Best School" 10 times
 count=0
 
 while [ $count -lt 10 ]
