@@ -1,1 +1,19 @@
 #!/usr/bin/env bash
+# This script is displaying "Best School" 10 times
+
+for number in {1..100}
+do
+        if [ $((number % 15)) -eq 0 ]
+        then
+                echo "FizzBuzz"
+        elif [ $((number % 3)) -eq 0 ]
+        then
+                echo "Fizz"
+        elif [ $((number % 5)) -eq 0 ]
+        then
+                echo "Buzz"
+        else
+                echo $number
+        fi
+
+done
