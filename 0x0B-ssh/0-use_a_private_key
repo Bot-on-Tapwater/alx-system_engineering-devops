@@ -5,7 +5,7 @@ private_key=~/.ssh/school
 
 # Define the username and hostname
 username=ubuntu
-hostname=54.237.106.126  # Replace with your server's IP address
+hostname=54.237.106.126
 
 # Connect to the server using SSH with the private key
 ssh -i "$private_key" "$username@$hostname"
