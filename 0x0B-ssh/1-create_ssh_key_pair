@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Define the key file name
+private_key="school"
+
+# Number of bits in the created key
+key_bits=4096
+
+# Passphrase to protect the key
+passphrase="betty"
+
+# Check if the private key file already exists
+if [ -f "$private_key" ]; then
+    echo "Private key file '$private_key' already exists. Aborting."
+    exit 1
+fi
+
+# Generate the RSA key pair
+echo "Generating public/private rsa key pair."
+ssh-keygen -t rsa -b $key_bits -N "$passphrase" -f "$private_key"
