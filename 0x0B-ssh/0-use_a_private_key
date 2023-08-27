@@ -1,11 +1,3 @@
 #!/usr/bin/env bash
-
-# Define the private key file path
-private_key=~/.ssh/school
-
-# Define the username and hostname
-username=ubuntu
-hostname=54.237.106.126
-
 # Connect to the server using SSH with the private key
-ssh -i "$private_key" "$username@$hostname"
+ssh -i ~/.ssh/school ubuntu@54.237.106.126
