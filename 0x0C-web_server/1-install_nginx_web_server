@@ -2,8 +2,7 @@
 
 # App name to be installed
 app_name="nginx"
-listen_port="/etc/nginx/sites-enabled/default"
-nginx_page="/var/www/html/index.nginx-debian.html"
+config_file="/etc/nginx/sites-available/default"
 
 # Check if the app is installed
 if command -v "$app_name" >/dev/null 2>&1; then
@@ -11,12 +10,28 @@ if command -v "$app_name" >/dev/null 2>&1; then
     :
 else
     # echo "$app_name is not installed. Installing..."
-    sudo apt install nginx
+    sudo apt-get update
+    sudo apt-get install -y "$app_name"
 fi
 
 # Give full permissions
-sudo chmod 777 "$listen_port"
-sudo chmod 777 "$nginx_page"
+# sudo chmod 777 "$listen_port"
+# sudo chmod 777 "$nginx_page"
 
-# Overwrite landing page
-echo "Hello World!" > "$nginx_page"
+mkdir /etc/nginx/html
+touch /etc/nginx/html/index.html
+
+# Write to index.html
+echo "Hello World!" > "/etc/nginx/html/index.html"
+
+# Server config
+printf %s "server {
+     listen      80 default_server;
+     listen      [::]:80 default_server;
+     root        /etc/nginx/html;
+     index       index.html index.htm;
+}
+" > /etc/nginx/sites-available/default
+
+# Restart the service
+service nginx restart
