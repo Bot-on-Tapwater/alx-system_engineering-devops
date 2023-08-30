@@ -12,15 +12,18 @@ else
     sudo apt-get install -y "$app_name"
 fi
 
-# Give full permissions
-# sudo chmod 777 "$listen_port"
-# sudo chmod 777 "$nginx_page"
+# Check if /etc/nginx/html directory exists before creating it
+if [ ! -d "/etc/nginx/html" ]; then
+    sudo mkdir -p /etc/nginx/html
+fi
 
-mkdir /etc/nginx/html
-touch /etc/nginx/html/index.html
+# Check if /etc/nginx/html/index.html file exists before creating it
+if [ ! -f "/etc/nginx/html/index.html" ]; then
+    sudo touch /etc/nginx/html/index.html
+fi
 
 # Write to index.html
-echo "Hello World!" > "/etc/nginx/html/index.html"
+echo "Hello World!" | sudo tee /etc/nginx/html/index.html
 
 # Server config
 printf %s "server {
@@ -30,10 +33,10 @@ printf %s "server {
      index       index.html index.htm;
 
      location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
      }
 }
-" > /etc/nginx/sites-available/default
+" | sudo tee /etc/nginx/sites-available/default
 
 # Restart the service
-service nginx restart
+sudo service nginx restart
