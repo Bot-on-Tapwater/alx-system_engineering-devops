@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # App name to be installed
 app_name="nginx"
 
