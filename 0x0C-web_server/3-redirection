@@ -1,1 +1,39 @@
 #!/usr/bin/env bash
+# App name to be installed
+app_name="nginx"
+
+# Check if the app is installed
+if command -v "$app_name" >/dev/null 2>&1; then
+    # echo "$app_name is installed.
+    :
+else
+    # echo "$app_name is not installed. Installing..."
+    sudo apt-get update
+    sudo apt-get install -y "$app_name"
+fi
+
+# Give full permissions
+# sudo chmod 777 "$listen_port"
+# sudo chmod 777 "$nginx_page"
+
+mkdir /etc/nginx/html
+touch /etc/nginx/html/index.html
+
+# Write to index.html
+echo "Hello World!" > "/etc/nginx/html/index.html"
+
+# Server config
+printf %s "server {
+     listen      80 default_server;
+     listen      [::]:80 default_server;
+     root        /etc/nginx/html;
+     index       index.html index.htm;
+
+     location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4
+     }
+}
+" > /etc/nginx/sites-available/default
+
+# Restart the service
+service nginx restart
