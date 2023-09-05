@@ -6,6 +6,8 @@ sudo apt-get install haproxy=2.0.\*
 
 config_file="/etc/haproxy/haproxy.cfg"
 
+echo "ENABLED=1" >> /etc/default/haproxy
+
 # Check if the file exists
 if [ -f "$config_file" ]; then
     {
