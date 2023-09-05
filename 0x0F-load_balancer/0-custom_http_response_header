@@ -1,28 +1,57 @@
 #!/usr/bin/env bash
 # Add custom headers to nginx server
 # shellcheck disable=SC2154
+# App name to be installed
+app_name="nginx"
 
-# Define the header name
-header_name="X-Served-By"
-
-# Get the hostname of the server
-header_value=$(hostname)
-
-# Define the path to your Nginx configuration file
-nginx_conf="/etc/nginx/nginx.conf"
-
-# Check if the configuration file exists
-if [ -f "$nginx_conf" ]; then
-    # Use sed to add the custom header in the http block
-    sudo sed -i "/http {/a \    add_header $header_name \"$header_value\";" "$nginx_conf"
-
-    # Test the configuration for syntax errors and check exit code directly
-    if sudo nginx -t; then
-        # Reload Nginx to apply changes
-        sudo systemctl reload nginx
-    else
-        echo "Failed to test Nginx configuration. Check for syntax errors."
-    fi
+# Check if the app is installed
+if command -v "$app_name" >/dev/null 2>&1; then
+    # echo "$app_name is installed.
+    :
 else
-    echo "Nginx configuration file not found at $nginx_conf."
+    # echo "$app_name is not installed. Installing..."
+    sudo apt-get update
+    sudo apt-get install -y "$app_name"
 fi
+
+# Check if /etc/nginx/html directory exists before creating it
+if [ ! -d "/etc/nginx/html" ]; then
+    sudo mkdir -p /etc/nginx/html
+fi
+
+# Check if /etc/nginx/html/index.html file exists before creating it
+if [ ! -f "/etc/nginx/html/index.html" ]; then
+    sudo touch /etc/nginx/html/index.html
+fi
+
+# Create the 404.html file
+sudo touch /etc/nginx/html/404.html
+echo "Ceci n'est pas une page" | sudo tee /etc/nginx/html/404.html
+
+# Write to index.html
+echo "Hello World!" | sudo tee /etc/nginx/html/index.html
+
+# Server config
+printf %s "server {
+     listen      80 default_server;
+     listen      [::]:80 default_server;
+     root        /etc/nginx/html;
+     index       index.html index.htm;
+     add_header X-Served-By $HOSTNAME
+
+     location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+     }
+
+     error_page 404 /404.html;
+     location /404 {
+        root /etc/nginx/html;
+        internal;
+     }
+}
+" | sudo tee /etc/nginx/sites-available/default
+
+# Restart the service
+sudo service nginx restart
+
+echo "Nginx configuration completed."
