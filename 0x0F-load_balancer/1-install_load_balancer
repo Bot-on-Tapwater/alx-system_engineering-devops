@@ -11,12 +11,17 @@ if [ -f "$config_file" ]; then
     {
         echo "frontend http"
         echo "    bind *:80"
+        echo "    mode http"
         echo "    default_backend servers"
         echo ""
         echo "backend servers"
-        echo "    balance roundrobin"
+        echo "    balance roundrobin"        
         echo "    server 134677-web-01 54.237.106.126:80 check"
         echo "    server 134677-web-02 54.175.223.76:80 check"
+        echo "listen stats"
+        echo "      bind *:1936"
+        echo "      stats enable"
+        echo "      stats uri /haproxy-stats"
     } >> "$config_file"
     # echo "Lines appended to $config_file"
 else
