@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Add custom headers to nginx server
+# shellcheck disable=SC2154
+
+# Define the header name
+header_name="X-Served-By"
+
+# Get the hostname of the server
+header_value=$(hostname)
+
+# Define the path to your Nginx configuration file
+nginx_conf="/etc/nginx/nginx.conf"
+
+# Check if the configuration file exists
+if [ -f "$nginx_conf" ]; then
+    # Use sed to add the custom header in the http block
+    sudo sed -i "/http {/a \    add_header $header_name \"$header_value\";" "$nginx_conf"
+
+    # Test the configuration for syntax errors and check exit code directly
+    if sudo nginx -t; then
+        # Reload Nginx to apply changes
+        sudo systemctl reload nginx
+    else
+        echo "Failed to test Nginx configuration. Check for syntax errors."
+    fi
+else
+    echo "Nginx configuration file not found at $nginx_conf."
+fi
