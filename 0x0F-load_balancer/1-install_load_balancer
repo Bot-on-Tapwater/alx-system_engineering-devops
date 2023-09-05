@@ -1,33 +1,21 @@
 #!/usr/bin/env bash
-# Install and configure HAproxy
+# script to install and configure haproxy as a load balancer
+# Distribute requests using a roundrobin algorithm
+# Make sure that HAproxy can be managed via an init script
 
-sudo apt-get update -y
-sudo apt-get install haproxy=2.0.\* -y
-
-config_file="/etc/haproxy/haproxy.cfg"
+sudo apt-get upgrade -y
+sudo apt-get install haproxy -y
 
 echo "ENABLED=1" >> /etc/default/haproxy
 
-# Check if the file exists
-if [ -f "$config_file" ]; then
-    {
-        echo "frontend http"
-        echo "    bind *:80"
-        echo "    mode http"
-        echo "    default_backend servers"
-        echo ""
-        echo "backend servers"
-        echo "    balance roundrobin"        
-        echo "    server 134677-web-01 54.237.106.126:80 check"
-        echo "    server 134677-web-02 54.175.223.76:80 check"
-        echo "listen stats"
-        echo "      bind *:1936"
-        echo "      stats enable"
-        echo "      stats uri /haproxy-stats"
-    } >> "$config_file"
-    # echo "Lines appended to $config_file"
-else
-    echo "File $config_file does not exist."
-fi
+echo "frontend http_front
+bind *:80
+mode http
+default_backend http_back
+
+backend http-back
+balance roundrobin
+server 242663-web-01 100.25.111.120:80 check
+server 242663-web-02 54.152.132.135:80 check " > /etc/haproxy/haproxy.cfg
 
 sudo service haproxy restart
