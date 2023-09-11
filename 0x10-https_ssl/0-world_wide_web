@@ -1,37 +1,18 @@
 #!/usr/bin/env bash
 # Print information about domain and subdomains
 
-# Extracts information from output of dig
-function extract {
-    # dig "$1" | awk 'BEGIN { FS=" " } /[[:space:]]IN[[:space:]]A[[:space:]]/ {print $4, $5}'
-
-    subdomain=$(dig "$1" | awk 'BEGIN { FS=" " } /[[:space:]]IN[[:space:]]A[[:space:]]/ {print $1}' | awk 'BEGIN { FS="." } {print $1}')
-
-    record_type=$(dig "$1" | awk 'BEGIN { FS=" " } /[[:space:]]IN[[:space:]]A[[:space:]]/ {print $4}')
-
-    ip=$(dig "$1" | awk 'BEGIN { FS=" " } /[[:space:]]IN[[:space:]]A[[:space:]]/ {print $5}')
-
-    echo "The subdomain $subdomain is a $record_type record and points to $ip"
+domain_information () {
+    line=$(dig "$2"."$1" | grep -A1 'ANSWER SECTION:' | tr '\t' '\n' | tail -2 | tr '\n' ' ')
+    echo "$2 $line" | awk '{print "The subdomain " $1 " is a " $2 " record and points to " $3}'
 }
 
-# Check if domain name passed
-if [ -n "$1" ]; then
-    :
-else
-    exit
-fi
-
-# Check if subdomain name passed
-if [ -n "$2" ]; then
-    sd_name=$2
-    extract "$sd_name"
-else
-    # array of subdomain strings
-    subdomains=("www" "lb-01" "web-01" "web-02")
-
-    # loop through sd displaying their info
-    for sd in "${subdomains[@]}"; do
-        sd_name="$sd.$1"
-        extract "$sd_name"
-    done
+if [ "$#" == 1 ]
+then
+  domain_information "$1" "www"
+  domain_information "$1" "lb-01"
+  domain_information "$1" "web-01"
+  domain_information "$1" "web-02"
+elif [ "$#" == 2 ]
+then
+  domain_information "$1" "$2"
 fi
