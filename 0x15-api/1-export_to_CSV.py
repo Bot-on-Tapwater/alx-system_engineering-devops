@@ -19,7 +19,7 @@ if __name__ == '__main__':
     # use requests to fetch data from url
     employee_details = requests.get(user_api_url)
 
-    emp_name = employee_details.json()['name']
+    emp_name = employee_details.json()['username']
 
     total_todos = requests.get(todos_api_url, params)
 
