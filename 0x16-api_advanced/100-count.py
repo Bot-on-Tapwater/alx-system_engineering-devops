@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 
+"""Count keywords"""
 import requests
 from collections import Counter
 
 
 def count_words(subreddit, word_list, after=None, counts=None):
+    """Count keywords"""
     # Initialize counts dictionary if not provided
     if counts is None:
         counts = Counter()
