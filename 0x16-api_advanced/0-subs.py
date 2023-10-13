@@ -22,7 +22,7 @@ def number_of_subscribers(subreddit):
         return (subscribers)
 
     else:
-        print(f"Error: \
-              Status code {response.status_code}.\
-                  Response text: {response.text}")
+        # print(f"Error: \
+        #       Status code {response.status_code}.\
+        #           Response text: {response.text}")
         return (0)
