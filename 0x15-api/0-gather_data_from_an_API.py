@@ -33,4 +33,4 @@ if __name__ == '__main__':
     print(f'Employee {emp_name} is done with tasks{task_completion_ratio}:')
 
     for todo in cmpl_tds:
-        print(f'\t{todo["title"]}')
+        print(f'\t {todo["title"]}')
