@@ -1,14 +1,29 @@
 #!/usr/bin/python3
-'''Returns number of subscibers in a subreddit'''
+
+"""Query number of subscribers for a subreddit"""
+
 import requests
 
 
 def number_of_subscribers(subreddit):
-    '''If not a valid subreddit, return 0'''
-    url = ('https://www.reddit.com/r/{}/about.json'.format(subreddit))
-    response = requests.get(url, allow_redirects=False)
+    """Query number of subscribers in subreddit"""
+
+    # url link to the reddit api
+    url = f"https://www.reddit.com/r/{subreddit}/about.json"
+
+    headers = {"User-Agent": "Custom"}
+    # send a GET request
+    response = requests.get(url, headers=headers, allow_redirects=False)
+
     if response.status_code == 200:
         data = response.json()
-        return (data['data']['subscribers'])
+
+        subscribers = data["data"]["subscribers"]
+        # print(subscribers)
+        return (subscribers)
+
     else:
-        return 0
+        # print(f"Error: \
+        #       Status code {response.status_code}.\
+        #           Response text: {response.text}")
+        return (0)
