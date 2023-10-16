@@ -40,8 +40,8 @@ frontend http_front
 
 backend http_back
     balance roundrobin
-	server 134677-web-01 34.204.95.72:80 check
-	server 134677-web-02 54.173.144.56:80 check
+	server 134677-web-01 100.26.57.173:80 check
+	server 134677-web-02 54.175.136.149:80 check
 
 # Define a new listen section for the stats page
 listen stats
