@@ -1,11 +1,6 @@
-file { '/var/www/html/wp-settings.php':
-  ensure  => file,
-  content => file('/var/www/html/wp-settings.php'),
-  replace => true,
-}
+# Fixes bad `phpp` extensions to `php` in the WordPress file `wp-settings.php`.
 
-exec { 'fix-wp-settings-php':
-  command     => 'sed -i "s/\/class-wp.phpp/\/class-wp.php/g" /var/www/html/wp-settings.php',
-  refreshonly => true,
-  subscribe   => File['/var/www/html/wp-settings.php'],
+exec { 'fix-wordpress':
+  command => 'sed -i s/phpp/php/g /var/www/html/wp-settings.php',
+  path    => '/usr/local/bin/:/bin/'
 }
